@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Ekaterina Filippova](https://up.htmlacademy.ru/javascript/12/user/562971).
-* Наставник: `Неизвестно`.
+* Наставник: Константин Мамаев.
 
 ---
 
