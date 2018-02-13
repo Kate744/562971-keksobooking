@@ -30,17 +30,17 @@ var COUNT = 8;
 // пустой массив для обьектов
 var offers = [];
 
-var getRandomNumberInRange = function (min, max) {
+function getRandomNumberInRange(min, max) {
   return Math.round(Math.random() * (max - min + 1)) + min;
-};
+}
 // берем любой элемент из массива
-var getRandomElement = function (array) {
+function getRandomElement(array) {
   // var randomNumber = Math.round(Math.random() * (array - 1));
   return array[getRandomNumberInRange(0, array.length)];
-};
+}
 
 // перемешиваем массив
-var shuffle = function (array) {
+function shuffle(array) {
   var currentIndex = array.length;
   while (currentIndex !== 0) {
     var randomIndex = Math.floor(Math.random() * currentIndex);
@@ -50,7 +50,7 @@ var shuffle = function (array) {
     array[randomIndex] = temporaryValue;
   }
   return array;
-};
+}
 
 
 // рандомное  кол-во опций в номере и их значения
@@ -61,7 +61,7 @@ function getFeatures() {
 }
 
 // создаем функцию, генерирующую массив из обьекта со случайными данными
-var getAds = function () {
+function getAds() {
   var mixTitles = shuffle(TITLE);
   var mixAvatars = shuffle(AVATARS);
 
@@ -93,26 +93,25 @@ var getAds = function () {
     // вставляем сгенерированные объекты в пустой массив
     offers.push(ad);
   }
-  return offers;
-};
+}
 // запускаем функцию для заполнения массива 8 обьектами
 getAds();
 
 // создаем фрагмент для создания пинов, обозначающих расположение созданных 8 обьектов
 var fragment = document.createDocumentFragment();
 // копируем шаблон пина
-var makePins = function () {
+function makePins() {
   for (var i = 0; i < COUNT; i++) {
-    var btn = document.querySelector('template').content.querySelector('.map__pin').cloneNode(true);
+    var btn = document.querySelector('template > .map__pin').cloneNode(true);
     // добавляем координаты х, у и картинку в button
     btn.style.left = (offers.location.x[i] - CENTER_PIN_WIDTH) + 'px';
     btn.style.top = (offers.location.y[i] - PIN_HEIGTH) + 'px';
     btn.img.src = offers.author.avatar[i];
-  }
-  fragment.appendChild(btn);
-  return makePins;
-};
 
+    fragment.appendChild(btn);
+  }
+}
+makePins();
 var putMapPins = document.querySelector('.map__pins');
 putMapPins.appendChild(fragment);
 
@@ -132,7 +131,7 @@ var TYPES = {
 // функция, заполняющая карточку выбранного обьекта
 // сейчас на основе первого по порядку элемента из сгенерированного массива
 function generateAd() {
-  var putIn = document.querySelector('template').querySelector('.article.map__card');
+  var putIn = document.querySelector('template > .article.map__card');
 
   var avatar = putIn.querySelector('.popup__avatar');
   var title = putIn.querySelector('h3');
