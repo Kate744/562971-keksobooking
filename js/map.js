@@ -27,7 +27,7 @@ var AVATARS = ['img/avatars/user01.png',
   'img/avatars/user08.png'];
 var COUNT = 8;
 
-// пустой массив обьектов
+// пустой массив для обьектов
 var offers = [];
 
 var getRandomNumberInRange = function (min, max) {
@@ -64,6 +64,7 @@ function getFeatures() {
 var getAds = function () {
   var mixTitles = shuffle(TITLE);
   var mixAvatars = shuffle(AVATARS);
+
   for (var i = 0; i < COUNT; i++) {
     var x = getRandomNumberInRange(300, 900);
     var y = getRandomNumberInRange(150, 500);
@@ -89,23 +90,24 @@ var getAds = function () {
         y: y
       }
     };
-    // вставляем сгенерированный объект в пустой массив
+    // вставляем сгенерированные объекты в пустой массив
     offers.push(ad);
   }
-  // и возвращаем его
   return offers;
 };
+// запускаем функцию для заполнения массива 8 обьектами
+getAds();
 
-// создаем фрагмент
+// создаем фрагмент для создания пинов, обозначающих расположение созданных 8 обьектов
 var fragment = document.createDocumentFragment();
-// копируем шаблон кнопки
+// копируем шаблон пина
 var makePins = function () {
   for (var i = 0; i < COUNT; i++) {
-    var btn = document.querySelector('template').querySelector('.map__pin').cloneNode(true);
+    var btn = document.querySelector('template').content.querySelector('.map__pin').cloneNode(true);
     // добавляем координаты х, у и картинку в button
-    btn.style.left = (getAds.location.x - CENTER_PIN_WIDTH) + 'px';
-    btn.style.top = (getAds.location.y - PIN_HEIGTH) + 'px';
-    btn.img.src = getAds.author.avatar;
+    btn.style.left = (offers.location.x[i] - CENTER_PIN_WIDTH) + 'px';
+    btn.style.top = (offers.location.y[i] - PIN_HEIGTH) + 'px';
+    btn.img.src = offers.author.avatar[i];
   }
   fragment.appendChild(btn);
   return makePins;
@@ -127,32 +129,35 @@ var TYPES = {
   }
 };
 
+// функция, заполняющая карточку выбранного обьекта
+// сейчас на основе первого по порядку элемента из сгенерированного массива
 function generateAd() {
-  var putIn = document.querySelector('template').content.querySelector('.article.map__card');
-  // var pElements = putIn.querySelectorAll('p');
+  var putIn = document.querySelector('template').querySelector('.article.map__card');
 
+  var avatar = putIn.querySelector('.popup__avatar');
   var title = putIn.querySelector('h3');
   var address = putIn.querySelector('p:first-of-type');
   var price = putIn.querySelector('.popup__price');
   var type = putIn.querySelector('h4');
   var roomsGuests = putIn('p:n-of-type(3)');
   var checkinCheckout = putIn('p:n-of-type(4)');
-  var features = putIn.querySelector('ul.popup__features');
+  var features = putIn.querySelector('ul.popup__features.li');
   var description = putIn('p:n-of-type(5)');
-  var photos = putIn.querySelector('ul.popup__pictures');
+  var photos = putIn.querySelector('ul.popup__pictures.li');
 
-  title.textContent = offers.offer.title;
-  address.textContent = offers.offer.address;
-  price.textContent = offers.offer.price + '&#x20bd;' + '/ночь';
-  type.textContent = TYPES[offers.offer.type].ru;
-  roomsGuests.textContent = offers.offer.rooms + ' комнаты для ' + offers.offer.guests + ' гостей';
-  checkinCheckout.textContent = 'Заезд после ' + offers.offer.checkin + ', выезд до ' + offers.offer.checkout;
-  features.textContent = offers.features;
-  description.textContent = offers.offer.description;
-  photos.src = offers.author.avatar;
+  avatar.src = offers.author.avatar[0];
+  title.textContent = offers.offer.title[0];
+  address.textContent = offers.offer.address[0];
+  price.textContent = offers.offer.price[0] + '&#x20bd;' + '/ночь';
+  type.textContent = TYPES[offers.offer.type].ru[0];
+  roomsGuests.textContent = offers.offer.rooms[0] + ' комнаты для ' + offers.offer.guests[0] + ' гостей';
+  checkinCheckout.textContent = 'Заезд после ' + offers.offer.checkin[0] + ', выезд до ' + offers.offer.checkout[0];
+  features.textContent = offers.features[0];
+  description.textContent = offers.offer.description[0];
+  photos.src = offers.offer.photos[0];
 
-  return putIn;
 }
+generateAd();
 
 var mapFilters = map.querySelector('.map__filters-container');
 map.insertBefore(generateAd(), mapFilters);
