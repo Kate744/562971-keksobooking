@@ -224,23 +224,25 @@ startPin.addEventListener('mouseup', function () {
 });
 
 // ищем поле адреса и заполняем его по умолчанию
-var notice = document.querySelector('.notice__form');
-notice.querySelector('#address');
+var address = document.querySelector('#address');
 function getAddress() {
-
+  address.placeholder = PIN_WIDTH + ', ' + CENTER_PIN_HEIGHT;
 }
-
+getAddress();
 
 // закрыть карточку кликом или клавишей
-var findCardClose = document.querySelector('.popup__close');
-findCardClose.addEventListener('click', closeCard);
+
+var btnClose0 = document.querySelector('button');
+var btnClose = btnClose0.querySelector('.popup__close');
+
+btnClose.addEventListener('click', closeCard);
 
 function closeCard() {
-  findCardClose.setAttribute('disabled', 'disabled');
+  btnClose.setAttribute('disabled', 'disabled');
   document.addEventListener('keydown', onCardClose);
 }
 function onCardClose(evt) {
-  if (findCardClose === document.activeElement) {
+  if (btnClose === document.activeElement) {
     if (evt.keyCode === ENTER_KEYCODE) {
       closeCard();
     }
