@@ -30,15 +30,6 @@ var INITIAL_POSITION_Y = (500 - 150) / 2;
 
 var map = document.querySelector('.map');
 
-// неактивное начальное состояние формы
-/* var notActive = function () {
-  var findForm = document.querySelector('.notice__form');
-  var notActiveForm = findForm.querySelectorAll('fieldset');
-  for (var i = 0; i < notActiveForm.length; i++) {
-    notActiveForm[i].setAttribute('disabled', 'disabled');
-}
-notActive();
-*/
 // пустой массив для обьектов
 var offers = [];
 
@@ -295,26 +286,25 @@ var checkTitle = function () {
   }
 };
 
-// цена в сутки в зависимости от типа жилья
+// задать миним цену в зависимости от типа жилья
+// строки 290- 298 данные для двух функций
+// validationPrice и checkPrice
 var typePrice = {
   bungalo: '0',
   flat: '1000',
   house: '5000',
   palace: '10000'
 };
-// задать миним цену в зависимости от типа жилья
-
+var value = type.value;
+var minPrice = typePrice[value];
 var validationPrice = function () {
-  var value = type.value;
-  var minPrice = typePrice[value];
+  // цена в сутки в зависимости от типа жилья
   price.setAttribute('min', minPrice);
   price.setAttribute('placeholder', 'от ' + minPrice);
 };
 validationPrice();
 // проверка заполненности поля цены
 var checkPrice = function () {
-  var value = type.value;
-  var minPrice = typePrice[value];
   if (price.validity.rangeUnderflow) {
     price.setCustomValidity('Минимальная цена' + minPrice + ' рублей');
   } else if (price.validity.rangeOverflow) {
@@ -325,7 +315,6 @@ var checkPrice = function () {
     price.setCustomValidity('');
   }
 };
-
 
 type.addEventListener('click', validationPrice);
 
@@ -369,19 +358,30 @@ var calculateRooms = function () {
   var guests2 = optElem[1];
   var guests3 = optElem[0];
   var guestsNo = optElem[3];
+  var deleteSelected = function () {
+    document.removeAttribute('selected');
+  };
   if (countOfRooms === '1') {
     guests2.setAttribute('disabled', 'disabled');
     guests3.setAttribute('disabled', 'disabled');
     guestsNo.setAttribute('disabled', 'disabled');
+    optElem.forEach(deleteSelected);
+    guests1.setAttribute('selected');
   } else if (countOfRooms === '2') {
     guests3.setAttribute('disabled', 'disabled');
     guestsNo.setAttribute('disabled', 'disabled');
+    optElem.forEach(deleteSelected);
+    guests1.setAttribute('selected');
   } else if (countOfRooms === '3') {
     guestsNo.setAttribute('disabled', 'disabled');
+    optElem.forEach(deleteSelected);
+    guests1.setAttribute('selected');
   } else {
     guests2.setAttribute('disabled', 'disabled');
     guests3.setAttribute('disabled', 'disabled');
     guests1.setAttribute('disabled', 'disabled');
+    optElem.forEach(deleteSelected);
+    guests1.setAttribute('selected');
   }
 };
 roomNumber.addEventListener('click', calculateRooms);
