@@ -30,6 +30,15 @@ var INITIAL_POSITION_Y = (500 - 150) / 2;
 
 var map = document.querySelector('.map');
 
+// неактивное начальное состояние формы
+/* var notActive = function () {
+  var findForm = document.querySelector('.notice__form');
+  var notActiveForm = findForm.querySelectorAll('fieldset');
+  for (var i = 0; i < notActiveForm.length; i++) {
+    notActiveForm[i].setAttribute('disabled', 'disabled');
+}
+notActive();
+*/
 // пустой массив для обьектов
 var offers = [];
 
@@ -173,6 +182,14 @@ var onPopupEscPress = function (evt) {
     map.removeChild(popup);
   }
 };
+// выбор features натабыванием с клавиатуры
+var featActive = document.querySelector('.features');
+var onFeaturesEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    featActive.classList.add('input:checked');
+  }
+};
+featActive.addEventListener('keyup', onFeaturesEnterPress);
 
 var generateCard = function (data) {
   var templateElement = document.querySelector('template').content;
@@ -213,6 +230,7 @@ var mapFilters = map.querySelector('.map__filters-container');
 map.classList.add('map--faded');
 // отключаем активность у полей
 // для начального экрана
+
 var form = document.querySelector('.notice__form');
 form.classList.add('notice__form--disabled');
 
@@ -255,3 +273,122 @@ var address = document.querySelector('#address');
 var getAddress = function () {
   address.placeholder = (INITIAL_POSITON_X + PIN_WIDTH / 2) + ', ' + (INITIAL_POSITION_Y + PIN_HEIGHT);
 };
+
+// ВАЛИДАЦИЯ ФОРМ
+
+// найдем форму заголовка и цены в разметке
+var findFormElement = document.querySelector('.notice');
+var type = findFormElement.querySelector('#type');
+var price = findFormElement.querySelector('#price');
+var title = findFormElement.querySelector('#title');
+
+// функция проверки заполненности поля заголовка
+var checkTitle = function () {
+  if (title.validity.tooShort) {
+    title.setCustomValidity('Заголовок слишком короткий (менее 30 символов)');
+  } else if (title.validity.tooLong) {
+    title.setCustomValidity('Заголовок слишком длинный (более 100 символов)');
+  } else if (title.validity.valueMissing) {
+    title.setCustomValidity('Пожалуйста, укажите заголовок объявления');
+  } else {
+    title.setCustomValidity('');
+  }
+};
+
+// цена в сутки в зависимости от типа жилья
+var typePrice = {
+  bungalo: '0',
+  flat: '1000',
+  house: '5000',
+  palace: '10000'
+};
+// задать миним цену в зависимости от типа жилья
+
+var validationPrice = function () {
+  var value = type.value;
+  var minPrice = typePrice[value];
+  price.setAttribute('min', minPrice);
+  price.setAttribute('placeholder', 'от ' + minPrice);
+};
+validationPrice();
+// проверка заполненности поля цены
+var checkPrice = function () {
+  var value = type.value;
+  var minPrice = typePrice[value];
+  if (price.validity.rangeUnderflow) {
+    price.setCustomValidity('Минимальная цена' + minPrice + ' рублей');
+  } else if (price.validity.rangeOverflow) {
+    price.setCustomValidity('Цена не может быть больше 1 000 000 рублей');
+  } else if (price.validity.valueMissing) {
+    price.setCustomValidity('Пожалуйста, укажите цену');
+  } else {
+    price.setCustomValidity('');
+  }
+};
+
+
+type.addEventListener('click', validationPrice);
+
+// время заезда и выезда одинаковы
+var timeIn = findFormElement.querySelector('#timein');
+var timeOut = findFormElement.querySelector('#timeout');
+
+var equalTime = function (one, two) {
+  two.value = one.value;
+};
+timeIn.addEventListener('click', function () {
+  equalTime(timeIn, timeOut);
+});
+timeOut.addEventListener('click', function () {
+  equalTime(timeOut, timeIn);
+});
+
+// кол-во комнат в зависимости от кол-ва гостей
+var roomNumber = findFormElement.querySelector('#room_number');
+var peopleNumber = findFormElement.querySelector('#capacity');
+
+/* var people = {
+  1: 'для 1 гостя',
+  2: 'для 2 гостей',
+  3: 'для 3 гостей',
+  0: 'не для гостей'
+}
+var rooms = {
+  1: ['1'],
+  2: ['1', '2'],
+  3: ['1', '2', '3'],
+  100: ['0']
+};
+*/
+
+var calculateRooms = function () {
+  var countOfRooms = roomNumber.value;
+  // var options = rooms[countOfRooms];
+  var optElem = peopleNumber.querySelectorAll('option');
+  var guests1 = optElem[2];
+  var guests2 = optElem[1];
+  var guests3 = optElem[0];
+  var guestsNo = optElem[3];
+  if (countOfRooms === '1') {
+    guests2.setAttribute('disabled', 'disabled');
+    guests3.setAttribute('disabled', 'disabled');
+    guestsNo.setAttribute('disabled', 'disabled');
+  } else if (countOfRooms === '2') {
+    guests3.setAttribute('disabled', 'disabled');
+    guestsNo.setAttribute('disabled', 'disabled');
+  } else if (countOfRooms === '3') {
+    guestsNo.setAttribute('disabled', 'disabled');
+  } else {
+    guests2.setAttribute('disabled', 'disabled');
+    guests3.setAttribute('disabled', 'disabled');
+    guests1.setAttribute('disabled', 'disabled');
+  }
+};
+roomNumber.addEventListener('click', calculateRooms);
+var inputError = [];
+form.addEventListener('invalid', function (evt) {
+  checkPrice();
+  checkTitle();
+  evt.target.style.borderColor = '#ff2400';
+  inputError.push(evt.target);
+}, true);

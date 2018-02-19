@@ -49,13 +49,13 @@ button[type=submit]
 
 button[type=submit]:hover
 {
-    border-color: #ff6d51;
+    border-color: #77dd77;
 }
 
 button[type=submit]:active
 {
     color: white;
-    border-color: #ff6d51;
+    border-color: #77dd77;
     outline: none;
     background-color: #ff6d51;
 }
@@ -84,7 +84,7 @@ input[type=number]:hover,
 select:hover,
 textarea:hover
 {
-    border-color: #fa9;
+    border-color: #77dd77;
 }
 
 input[type=text]:focus,
@@ -93,7 +93,7 @@ select:focus,
 textarea:focus
 {
     outline: none;
-    box-shadow: 0 0 4px 1px #ff6547;
+    box-shadow: 0 0 4px 1px #50c878;
 }
 
 .hidden
@@ -140,7 +140,7 @@ textarea:focus
 
 .features input:checked + label
 {
-    background-color: #ff6547;
+    background-color: #50c878;
     box-shadow: 0 1px 3px rgba(0, 0, 0, .2) inset;
 }
 
