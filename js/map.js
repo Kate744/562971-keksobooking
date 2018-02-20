@@ -267,6 +267,8 @@ var getAddress = function () {
 
 // ВАЛИДАЦИЯ ФОРМ
 
+// заполнение поля адреса в зависимости от положения метки
+
 // найдем форму заголовка и цены в разметке
 var findFormElement = document.querySelector('.notice');
 var type = findFormElement.querySelector('#type');
@@ -295,16 +297,19 @@ var typePrice = {
   house: '5000',
   palace: '10000'
 };
-var value = type.value;
-var minPrice = typePrice[value];
+
 var validationPrice = function () {
   // цена в сутки в зависимости от типа жилья
+  var value = type.value;
+  var minPrice = typePrice[value];
   price.setAttribute('min', minPrice);
   price.setAttribute('placeholder', 'от ' + minPrice);
 };
 validationPrice();
 // проверка заполненности поля цены
 var checkPrice = function () {
+  var value = type.value;
+  var minPrice = typePrice[value];
   if (price.validity.rangeUnderflow) {
     price.setCustomValidity('Минимальная цена' + minPrice + ' рублей');
   } else if (price.validity.rangeOverflow) {
@@ -336,55 +341,45 @@ timeOut.addEventListener('click', function () {
 var roomNumber = findFormElement.querySelector('#room_number');
 var peopleNumber = findFormElement.querySelector('#capacity');
 
-/* var people = {
-  1: 'для 1 гостя',
-  2: 'для 2 гостей',
-  3: 'для 3 гостей',
-  0: 'не для гостей'
-}
-var rooms = {
-  1: ['1'],
-  2: ['1', '2'],
-  3: ['1', '2', '3'],
-  100: ['0']
-};
-*/
-
 var calculateRooms = function () {
-  var countOfRooms = roomNumber.value;
-  // var options = rooms[countOfRooms];
-  var optElem = peopleNumber.querySelectorAll('option');
-  var guests1 = optElem[2];
-  var guests2 = optElem[1];
-  var guests3 = optElem[0];
-  var guestsNo = optElem[3];
+  var chosenVariantOfRooms = roomNumber.value;
+  var guestsOptionArray = peopleNumber.querySelectorAll('option');
+  // var roomsOptionArray = roomNumber.querySelectorAll('option');
+
   var deleteSelected = function () {
-    document.removeAttribute('selected');
+    for (var i = 0; i < guestsOptionArray; i++) {
+      guestsOptionArray[i].disabled = false;
+    }
   };
-  if (countOfRooms === '1') {
-    guests2.setAttribute('disabled', 'disabled');
-    guests3.setAttribute('disabled', 'disabled');
-    guestsNo.setAttribute('disabled', 'disabled');
-    optElem.forEach(deleteSelected);
-    guests1.setAttribute('selected');
-  } else if (countOfRooms === '2') {
-    guests3.setAttribute('disabled', 'disabled');
-    guestsNo.setAttribute('disabled', 'disabled');
-    optElem.forEach(deleteSelected);
-    guests1.setAttribute('selected');
-  } else if (countOfRooms === '3') {
-    guestsNo.setAttribute('disabled', 'disabled');
-    optElem.forEach(deleteSelected);
-    guests1.setAttribute('selected');
-  } else {
-    guests2.setAttribute('disabled', 'disabled');
-    guests3.setAttribute('disabled', 'disabled');
-    guests1.setAttribute('disabled', 'disabled');
-    optElem.forEach(deleteSelected);
-    guests1.setAttribute('selected');
+  deleteSelected();
+  switch (chosenVariantOfRooms) {
+
+    case '1':
+      peopleNumber.value = '1';
+      guestsOptionArray[0].disabled = true;
+      guestsOptionArray[1].disabled = true;
+      guestsOptionArray[3].disabled = true;
+      break;
+    case '2':
+      peopleNumber.value = '2';
+      guestsOptionArray[0].disabled = true;
+      guestsOptionArray[3].disabled = true;
+      break;
+    case '3':
+      peopleNumber.value = '3';
+      guestsOptionArray[3].disabled = true;
+      break;
+    case '100':
+      peopleNumber.value = '0';
+      guestsOptionArray[0].disabled = true;
+      guestsOptionArray[1].disabled = true;
+      guestsOptionArray[2].disabled = true;
+      break;
   }
 };
-roomNumber.addEventListener('click', calculateRooms);
+calculateRooms();
+roomNumber.addEventListener('change', calculateRooms);
+// захватываем событие на форме и обрамляем красным
 var inputError = [];
 form.addEventListener('invalid', function (evt) {
   checkPrice();
