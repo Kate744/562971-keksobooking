@@ -341,42 +341,23 @@ timeOut.addEventListener('click', function () {
 var roomNumber = findFormElement.querySelector('#room_number');
 var peopleNumber = findFormElement.querySelector('#capacity');
 
+var ROOMS_CAPACITY = {
+  '1': ['1'],
+  '2': ['1', '2'],
+  '3': ['1', '2', '3'],
+  '100': ['0']
+};
+
 var calculateRooms = function () {
-  var chosenVariantOfRooms = roomNumber.value;
-  var guestsOptionArray = peopleNumber.querySelectorAll('option');
-  // var roomsOptionArray = roomNumber.querySelectorAll('option');
-
-  var deleteSelected = function () {
-    for (var i = 0; i < guestsOptionArray; i++) {
-      guestsOptionArray[i].disabled = false;
-    }
-  };
-  deleteSelected();
-  switch (chosenVariantOfRooms) {
-
-    case '1':
-      peopleNumber.value = '1';
-      guestsOptionArray[0].disabled = true;
-      guestsOptionArray[1].disabled = true;
-      guestsOptionArray[3].disabled = true;
-      break;
-    case '2':
-      peopleNumber.value = '2';
-      guestsOptionArray[0].disabled = true;
-      guestsOptionArray[3].disabled = true;
-      break;
-    case '3':
-      peopleNumber.value = '3';
-      guestsOptionArray[3].disabled = true;
-      break;
-    case '100':
-      peopleNumber.value = '0';
-      guestsOptionArray[0].disabled = true;
-      guestsOptionArray[1].disabled = true;
-      guestsOptionArray[2].disabled = true;
-      break;
+  if (peopleNumber.options.length > 0) {
+    [].forEach.call(peopleNumber.options, function (item) {
+      item.selected = (ROOMS_CAPACITY[roomNumber.value] [0] === item.value) ? true : false;
+      item.hidden = (ROOMS_CAPACITY[roomNumber.value].indexOf(item.value) >= 0) ? false : true;
+    });
   }
 };
+
+
 calculateRooms();
 roomNumber.addEventListener('change', calculateRooms);
 // захватываем событие на форме и обрамляем красным
