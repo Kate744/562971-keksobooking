@@ -1,18 +1,19 @@
 'use strict';
 
-(function() {
+(function () {
   // создаем фрагмент для создания пинов, обозначающих расположение созданных 8 обьектов
   var fragment = document.createDocumentFragment();
   // копируем шаблон пина
   var makePins = function () {
-    for (var i = 0; i < COUNT; i++) {
+    for (var i = 0; i < window.globalVars.COUNT; i++) {
       var templateElement = document.querySelector('template').content;
       var btn = templateElement.querySelector('.map__pin').cloneNode(true);
       var image = btn.querySelector('img');
-      var data = offers[i];
+      var ads = window.getDataAds();
+      var data = ads[i];
       // добавляем координаты х, у и картинку в button
-      btn.style.left = (data.location.x - PIN_WIDTH) + 'px';
-      btn.style.top = (data.location.y + PIN_HEIGHT) + 'px';
+      btn.style.left = (data.location.x - window.globalVars.PIN_WIDTH) + 'px';
+      btn.style.top = (data.location.y + window.globalVars.PIN_HEIGHT) + 'px';
       image.src = data.author.avatar;
       btn.tabIndex = i;
 
@@ -59,27 +60,27 @@
 
   // функция, заполняющая карточку выбранного обьекта
   var onCloseClick = function () {
-    var popup = map.querySelector('.popup');
-    map.removeChild(popup);
+    var popup = window.globalVars.map.querySelector('.popup');
+    window.globalVars.map.removeChild(popup);
   };
 
   var onCloseKeyUp = function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      var popup = map.querySelector('.popup');
-      map.removeChild(popup);
+    if (evt.keyCode === window.globalVars.ENTER_KEYCODE) {
+      var popup = window.globalVars.map.querySelector('.popup');
+      window.globalVars.map.removeChild(popup);
     }
   };
 
   var onPopupEscPress = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      var popup = map.querySelector('.popup');
-      map.removeChild(popup);
+    if (evt.keyCode === window.globalVars.ESC_KEYCODE) {
+      var popup = window.globalVars.map.querySelector('.popup');
+      window.globalVars.map.removeChild(popup);
     }
   };
   // выбор features натабыванием с клавиатуры
   var featActive = document.querySelector('.features');
   var onFeaturesEnterPress = function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === window.globalVars.ENTER_KEYCODE) {
       featActive.classList.add('input:checked');
     }
   };
@@ -117,38 +118,38 @@
     btnClose.addEventListener('click', onCloseClick);
     btnClose.addEventListener('keyup', onCloseKeyUp);
     document.addEventListener('keyup', onPopupEscPress);
-    map.insertBefore(putIn, mapFilters);
+    window.globalVars.map.insertBefore(putIn, mapFilters);
   };
-  var mapFilters = map.querySelector('.map__filters-container');
+  var mapFilters = window.globalVars.map.querySelector('.map__filters-container');
 
-  map.classList.add('map--faded');
+  window.globalVars.map.classList.add('map--faded');
   // отключаем активность у полей
   // для начального экрана
 
-  form.classList.add('notice__form--disabled');
+  window.globalVars.formElement.classList.add('notice__form--disabled');
 
   // ищем стартовый пин
   var startPin = document.querySelector('.map__pin--main');
 
   var mouseupOnStartPin = function () {
-    map.classList.remove('map--faded');
-    form.classList.remove('notice__form--disabled');
+    window.globalVars.map.classList.remove('map--faded');
+    window.globalVars.formElement.classList.remove('notice__form--disabled');
     makePins();
     putMapPins.appendChild(fragment);
 
-    var pins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var pins = window.globalVars.map.querySelectorAll('.map__pin:not(.map__pin--main)');
 
     [].forEach.call(pins, function (item, index) {
       item.addEventListener('click', function () {
-        var popup = map.querySelector('.popup');
+        var popup = window.globalVars.map.querySelector('.popup');
         if (popup !== null) {
-          map.removeChild(popup);
+          window.globalVars.map.removeChild(popup);
         }
-        generateCard(offers[index]);
+        generateCard(window.getDataAds[index]);
       });
     });
 
-    var fieldsets = form.querySelectorAll('fieldset');
+    var fieldsets = window.globalVars.formElement.querySelectorAll('fieldset');
     for (var i = 0; i < fieldsets.length; i++) {
       fieldsets[i].removeAttribute('disabled');
     }
@@ -156,7 +157,7 @@
 
   startPin.addEventListener('mouseup', function () {
     mouseupOnStartPin();
-    getAddress();
+    window.getAddress();
   });
 
 })();

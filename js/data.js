@@ -21,7 +21,7 @@
     'img/avatars/user06.png',
     'img/avatars/user07.png',
     'img/avatars/user08.png'];
-  var COUNT = 8;
+
 
   // пустой массив для обьектов
   var offers = [];
@@ -59,7 +59,7 @@
     var mixTitles = shuffle(TITLE);
     var mixAvatars = shuffle(AVATARS);
 
-    for (var i = 0; i < COUNT; i++) {
+    for (var i = 0; i < window.globalVars.COUNT; i++) {
       var x = getRandomNumberInRange(300, 900);
       var y = getRandomNumberInRange(150, 500);
       var ad = {
@@ -88,5 +88,4 @@
       offers.push(ad);
     }
   };
-
 })();

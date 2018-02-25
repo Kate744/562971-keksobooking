@@ -95,7 +95,7 @@
   roomNumber.addEventListener('change', calculateRooms);
   // захватываем событие на форме и обрамляем красным
   var inputError = [];
-  form.addEventListener('invalid', function (evt) {
+  window.globalVars.formElement.addEventListener('invalid', function (evt) {
     checkPrice();
     checkTitle();
     evt.target.style.borderColor = '#ff2400';
@@ -109,6 +109,6 @@
   var address = document.querySelector('#address');
 
   window.getAddress = function () {
-    address.placeholder = (INITIAL_POSITON_X + PIN_WIDTH / 2) + ', ' + (INITIAL_POSITION_Y + PIN_HEIGHT);
+    address.placeholder = (INITIAL_POSITON_X + window.globalVars.PIN_WIDTH / 2) + ', ' + (INITIAL_POSITION_Y + window.globalVars.PIN_HEIGHT);
   };
 })();
