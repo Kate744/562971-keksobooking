@@ -25,7 +25,6 @@
 
   // пустой массив для обьектов
   var offers = [];
-
   var getRandomNumberInRange = function (min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
   };
@@ -55,7 +54,7 @@
   };
 
   // создаем функцию, генерирующую массив из обьектов со случайными данными
-  window.getDataAds = function () {
+  window.getDataAds = function (index) {
     var mixTitles = shuffle(TITLE);
     var mixAvatars = shuffle(AVATARS);
 
@@ -88,6 +87,6 @@
       offers.push(ad);
 
     }
-    return offers;
+    return index >= 0 ? offers[index] : offers;
   };
 })();

@@ -3,14 +3,15 @@
 (function () {
   // создаем фрагмент для создания пинов, обозначающих расположение созданных 8 обьектов
   var fragment = document.createDocumentFragment();
+  // var ads = window.getDataAds();
   // копируем шаблон пина
   var makePins = function () {
     for (var i = 0; i < window.globalVars.COUNT; i++) {
       var templateElement = document.querySelector('template').content;
       var btn = templateElement.querySelector('.map__pin').cloneNode(true);
       var image = btn.querySelector('img');
-      var ads = window.getDataAds();
-      var data = ads[i];
+
+      var data = window.getDataAds(i);
       // добавляем координаты х, у и картинку в button
       btn.style.left = (data.location.x - window.globalVars.PIN_WIDTH) + 'px';
       btn.style.top = (data.location.y + window.globalVars.PIN_HEIGHT) + 'px';
@@ -138,14 +139,13 @@
     putMapPins.appendChild(fragment);
 
     var pins = window.globalVars.map.querySelectorAll('.map__pin:not(.map__pin--main)');
-
     [].forEach.call(pins, function (item, index) {
       item.addEventListener('click', function () {
         var popup = window.globalVars.map.querySelector('.popup');
         if (popup !== null) {
           window.globalVars.map.removeChild(popup);
         }
-        generateCard(window.getDataAds[index]);
+        generateCard(window.getDataAds(index));
       });
     });
 
