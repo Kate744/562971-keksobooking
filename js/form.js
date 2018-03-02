@@ -22,8 +22,6 @@
   };
 
   // задать миним цену в зависимости от типа жилья
-  // строки 290- 298 данные для двух функций
-  // validationPrice и checkPrice
   var typePrice = {
     bungalo: '0',
     flat: '1000',
@@ -102,13 +100,10 @@
     inputError.push(evt.target);
   }, true);
 
-  // ищем поле адреса и заполняем его по умолчанию
-  var INITIAL_POSITON_X = (900 - 300) / 2;
-  var INITIAL_POSITION_Y = (500 - 150) / 2;
+  // ищем поле адреса и рассчитываем координату с поправкой на размеры пина
 
-  var address = document.querySelector('#address');
-
-  window.getAddress = function () {
-    address.placeholder = (INITIAL_POSITON_X + window.globalVars.PIN_WIDTH / 2) + ', ' + (INITIAL_POSITION_Y + window.globalVars.PIN_HEIGHT);
+  window.getAddress = function (coordX, coordY) {
+    window.globalVars.address.placeholder = (coordX + window.globalVars.PIN_WIDTH / 2) + ', ' + (coordY + window.globalVars.PIN_HEIGHT);
   };
+
 })();
