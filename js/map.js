@@ -73,8 +73,9 @@
 
   var onPopupEscPress = function (evt) {
     if (evt.keyCode === window.globalVars.ESC_KEYCODE) {
-      var popup = window.globalVars.map.querySelector('.popup');
-      window.globalVars.map.removeChild(popup);
+      // var popup = window.globalVars.map.querySelector('.popup');
+
+      window.globalVars.map.removeChild(window.globalVars.popup);
     }
   };
   // выбор features натабыванием с клавиатуры
@@ -154,12 +155,41 @@
       fieldsets[i].removeAttribute('disabled');
     }
   };
+  // клик на сохранить и отмена
+  var findBtn = document.querySelector('.form__element--submit');
+  var findSubmit = findBtn.querySelector('.form__submit');
+  var findCancel = findBtn.querySelector('.form__reset');
+
+  var cleanPage = function () {
+    window.getAddress(window.globalVars.INITIAL_POSITON_X, window.globalVars.INITIAL_POSITION_Y); // метка адреса в исх состояние
+    window.globalVars.map.removeChild(window.globalVars.popup); // скрыть активный попап
+    // функция, очищающая все поля, скрывающая метки
+    var clear = function () {
+      var field = document.querySelectorAll('.notice__form');
+      for (var i = 0; i < field.length; i++) {
+        field[i].reset();
+      }
+    };
+    clear();
+  };
+  // обработчик события на кнопку "Сохранить"
+  findSubmit.addEventListener('submit', function (evt) {
+    window.upload(new FormData(form), function (response) {
+      cleanPage();
+    });
+    evt.preventDefault();
+  });
+
+  // делаем сброс при нажатии на кнопку сброс
+  findCancel.addEventListener('reset', function () {
+    cleanPage();
+    window.getAddress(window.globalVars.INITIAL_POSITON_X, window.globalVars.INITIAL_POSITION_Y);
+  });
 
   startPin.addEventListener('mouseup', function () {
     mouseupOnStartPin();
     window.getAddress(window.globalVars.INITIAL_POSITON_X, window.globalVars.INITIAL_POSITION_Y);
   });
-
 })();
 
 // drag n drop

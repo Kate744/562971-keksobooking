@@ -5,8 +5,10 @@
   var formElement = document.querySelector('.notice__form');
   var map = document.querySelector('.map');
   var address = document.querySelector('#address');
+  var popup = window.globalVars.map.querySelector('.popup');
 
   window.globalVars = {
+    popup: popup,
     formElement: formElement,
     map: map,
     address: address,

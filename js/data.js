@@ -89,4 +89,34 @@
     }
     return index >= 0 ? offers[index] : offers;
   };
+
+  window.__jsonpCallback([
+    {'name': 'object 1'},
+    {'name': 'object 2'},
+    {'name': 'object 3'}
+  ]);
+  // отрисовка данных с сервера в документе
+  var CALLBACK_NAME = '__jsonpCallback';
+  var DATA_URL = '//1510.dump.academy/code-and-magick/data';
+
+  var renderItem = function (item) {
+    var dataDiv = document.createElement('div');
+    dataDiv.textContent = item.name;
+    document.body.appendChild(dataDiv);
+  };
+  // функция, принимающая данные с сервера
+  window[CALLBACK_NAME] = function (data) {
+    for (var i = 0; i < data.length; i++) {
+      renderItem(data[i]);
+    }
+  };
+  var loader = document.createElement('script');
+  loader.src = DATA_URL + '?callback=' + CALLBACK_NAME;
+
+  loader.addEventListener('error', function () {
+    document.body.textContent = 'Произошла ошибка при загрузке данных';
+  });
+
+  document.body.append(loader);
+
 })();
